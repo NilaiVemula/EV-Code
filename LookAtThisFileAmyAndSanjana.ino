@@ -52,29 +52,32 @@ pinMode(pinDir, OUTPUT); //Configures motor direction as output//
 
 //Repeats over and over again//
 void loop() {
-Serial.println("Encoder value"); //Prints label//
-Serial.print(encoder); //Prints encoder value//
-REAL_DISTANCE = ((encoder/600)*(2*3.14159*0.123825)) ///Conversion///
-Serial.println("Real Distance value (m)"); //Prints label//
-Serial.print(REAL_DISTANCE); //Prints distance value//
+//Printing data//
+  Serial.println("Encoder value"); //Prints label//
+  Serial.print(encoder); //Prints encoder value//
+  REAL_DISTANCE = ((encoder/600)*(2*3.14159*0.123825)) ///Conversion///
+  Serial.println("Real Distance value (m)"); //Prints label//
+  Serial.print(REAL_DISTANCE); //Prints distance value//
 //Controlling the motor based on the encoder value//
-  while(REAL_DISTANCE < change_speed_distance){ 
-    ////When the car is at a distance smaller than the changing_speed_location, the motor will go fast////
-    analogWrite(pinPwm, 200); //fast speed//
-    digitalWrite(pinDir, LOW);
-  }
+  if (REAL_DISTANCE < change_speed_distance)
+    {
+      ////When the car is at a distance smaller than the changing_speed_location, the motor will go fast////
+      analogWrite(pinPwm, 200); //fast speed//
+      digitalWrite(pinDir, LOW);
+    }
+  else if (REAL_DISTANCE >= change_speed_distance)
+    {
+      ////When the car is at a distance greater than the changing_speed_location, the motor will go slowly////
+      analogWrite(pinPwm, 50); //slow speed//
+      digitalWrite(pinDir, LOW);
+    }
+  else if (REAL_DISTANCE >= final_distance) 
+    {
+       ////When the car reaches (or exceeds) the final distance, pause for 10 seconds////
+       ////This should give you enough time to come to the car and turn it off////
+       delay(10000);
+    }
 
-  while(REAL_DISTANCE >= change_speed_distance){ 
-    ////When the car is at a distance greater than the changing_speed_location, the motor will go slowly////
-    analogWrite(pinPwm, 50); //slow speed//
-    digitalWrite(pinDir, LOW);
-  }
-
-  if (REAL_DISTANCE >= final_distance){
-    ////When the car reaches (or exceeds) the final distance, pause for 10 seconds////
-    ////This should give you enough time to come to the car and turn it off////
-    delay(10000);
-  }
 }
 ///////////////////////////////////////////////////////////////////////////////////////////
 /// DO NOT EDIT///
