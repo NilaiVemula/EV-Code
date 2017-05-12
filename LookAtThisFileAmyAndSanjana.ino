@@ -84,7 +84,7 @@ while(REAL_DISTANCE >= change_speed_distance){
 }
 
 if (REAL_DISTANCE >= final_distance){
-  ////When the car reaches the final distance, pause for 10 seconds////
+  ////When the car reaches (or exceeds) the final distance, pause for 10 seconds////
   ////This should give you enough time to come to the car and turn it off////
   delay(10000);
 }
