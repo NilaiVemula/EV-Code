@@ -39,7 +39,7 @@ long REAL_DISTANCE = 0;
 
 //Setting everything up//
 void setup() {
-Serial.begin(9600); // Prepares the seriel outputter //
+Serial.begin(9600); // Prepares the serial outputter //
 pinMode(encoder_a, INPUT_PULLUP); //Configures the encoder signal as an input//
 pinMode(encoder_b, INPUT_PULLUP); //Configures the encoder signal as an input//
 
