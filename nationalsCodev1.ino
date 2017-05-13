@@ -93,3 +93,4 @@ void encoderPinChangeB() {
   // Check if encoders equal to each other
   ENCODER_VALUE += digitalRead(ENCODER_A) != digitalRead(ENCODER_B) ? -1 : 1;
 }
+
