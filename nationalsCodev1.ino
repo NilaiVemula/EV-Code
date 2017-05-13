@@ -1,85 +1,95 @@
+/*
+White Station High School Science Olympiad Electric Vehicle Code
+  Written by Justin Du & Nilai Vemula 
+*/
 
-////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-///Version 1 of Science Olympiad Electric Vehicle Code//////////////////////////////////////////////////////////////////////////////////////////////////////
-///White Station High School////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-///Code Written by Nilai Vemula/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-//VERY IMPORTANT SETUP INFO FIRST///////////////////////////////////////////////////////////////////////////////
-  //Values to enter//
+/* Stuff to change at competition */
+// Distance where car should switch from fast to slow
+const long CHANGE_SPEED_DISTANCE = 8.5;
+// Final distance
+const long FINAL_DISTANCE = 9.5;
 
-const long change_speed_distance = 8.5;    ////Distance at where the car should switch from fast to slow (8.5m) ////
-const long final_distance = 9.5;     ////INSERT FINAL DISTANCE ////
-/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+/* Wiring Information */
 
-
-//Wiring Information///////////////////////////////////////////////////////////////////////////////////////////////
-  //Encoder//
-
+  /* Encoder */
     // Red - 5V
     // Black - GND
-    //Signal A in D2
-    const int encoder_a = 2; 
-    //Signal B in D3
-    const int encoder_b = 3; 
+    // Signal A in D2
+    const int ENCODER_A = 2; 
+    // Signal B in D3
+    const int ENCODER_B = 3; 
 
-  //Motor Shield//
+  /* Motor Shield */
 
-    // Motor PWM is connected to pin 5 (Check jumper).
-    const int pinPwm = 5;
-    // Motor DIR is connected to pin 4 (Check jumper).
-    const int pinDir = 4;
-////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+    // Motor PWM - connected to pin 5 (Check jumper).
+    const int PIN_PWM = 5;
+    // Motor DIR - connected to pin 4 (Check jumper).
+    const int PIN_DIR = 4;
 
-//Setting initial values to zero//
-long encoder = 0;
-long REAL_DISTANCE = 0;
+// Set initial values
+void reset() {
+  long ENCODER_VALUE = 0;
+  long REAL_DISTANCE = 0; 
+}
 
-//Setting everything up//
+// Setup function
 void setup() {
-Serial.begin(9600); // Prepares the serial outputter //
-pinMode(encoder_a, INPUT_PULLUP); //Configures the encoder signal as an input//
-pinMode(encoder_b, INPUT_PULLUP); //Configures the encoder signal as an input//
 
-attachInterrupt(0, encoderPinChangeA, CHANGE); //Configures the encoder signal as an "interrupt"//
-attachInterrupt(1, encoderPinChangeB, CHANGE); //Configures the encoder signal as an "interrupt"//
+  // Call the reset
+  reset();
 
-pinMode(pinPwm, OUTPUT); //Configures motor speed as output//
-pinMode(pinDir, OUTPUT); //Configures motor direction as output//
+  // Error handling
+  Serial.begin(9600);
+
+  // Attach encoders
+  pinMode( ENCODER_A, INPUT_PULLUP );
+  pinMode( ENCODER_B, INPUT_PULLUP );
+
+  // Attach encoder interrupt
+  attachInterrupt(0, encoderPinChangeA, CHANGE );
+  attachInterrupt(1, encoderPinChangeB, CHANGE );
+
+  // Motor Speed
+  pinMode(PIN_PWM, OUTPUT);
+
+  // Motor Direction
+  pinMode(PIN_DIR, OUTPUT);
 }
 
-//Repeats over and over again//
+// Loop - FOREVER
 void loop() {
-//Printing data//
-  Serial.print("Encoder value"); //Prints label//
-  Serial.print(encoder); //Prints encoder value//
-  REAL_DISTANCE = abs(((encoder/600)*(3.14159*0.123825))) ///Conversion///
-  Serial.print("Real Distance value (m)"); //Prints label//
-  Serial.println(REAL_DISTANCE); //Prints distance value//
-//Controlling the motor based on the encoder value//
-  if (REAL_DISTANCE < change_speed_distance)
-    {
-      analogWrite(pinPwm, 200); //fast speed//
-      digitalWrite(pinDir, LOW);
-    }
-  else
-    {
-      analogWrite(pinPwm, 50); //slow speed//
-      digitalWrite(pinDir, LOW);
-    }
+
+  // Print encoder value
+  Serial.print("Encoder value: ");
+  Serial.println(ENCODER_VALUE);
+
+  // Calculate real distance
+  REAL_DISTANCE = abs( ( ( encoder / 600 ) * ( 3.14159 * 0.123825 ) ) )
+
+  // Print real distance
+  Serial.print("Real Distance in meters: ");
+  Serial.println(REAL_DISTANCE);
+
+  // Control motor based on the encoder value
+  if ( REAL_DISTANCE < CHANGE_SPEED_DISTANCE ) {
+    // Fast speed - ranges from 0(slow) to 255(fast)
+    analogWrite(pinPwm, 200);
+    digitalWrite(pinDir, LOW);
+  }
+  else {
+    // Slow speed
+    analogWrite(pinPwm, 50);
+    digitalWrite(pinDir, LOW);
+  }
 }
-///////////////////////////////////////////////////////////////////////////////////////////
-/// DO NOT EDIT///
-/// Used to update encoder values ///
+
+/* DO NOT EDIT - USED TO UPDATE ENCODER VALUES */
 void encoderPinChangeA() {
-encoder += digitalRead(encoder_a) == digitalRead(encoder_b) ? -1 : 1;
+  // Check if encoders equal to each other
+  ENCODER_VALUE += digitalRead(ENCODER_A) == digitalRead(ENCODER_B) ? -1 : 1;
 }
 
 void encoderPinChangeB() {
-encoder += digitalRead(encoder_a) != digitalRead(encoder_b) ? -1 : 1;
+  // Check if encoders equal to each other
+  ENCODER_VALUE += digitalRead(ENCODER_A) != digitalRead(ENCODER_B) ? -1 : 1;
 }
-///////////////////////////////////////////////////////////////////////////////////////////
-
-
