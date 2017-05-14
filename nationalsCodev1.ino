@@ -96,14 +96,13 @@ void loop() {
     Serial.println("FINISHING");
     analogWrite(PIN_PWM, 0); //Turn off motor
     digitalWrite(PIN_DIR, LOW); 
-    delay(250) //Off for 0.25 seconds
+    delay(250); //Off for 0.25 seconds
     analogWrite(PIN_PWM, 50); //Slowly moving forward
     digitalWrite(PIN_DIR, LOW);
-    delay(250) //Slow for 0.25 seconds
+    delay(250); //Slow for 0.25 seconds
     analogWrite(PIN_PWM, 50); //Sets motor backward
     digitalWrite(PIN_DIR, LOW);
-    delay(50) //Backward for 0.05 seconds
-    return;
+    delay(50); //Backward for 0.05 seconds
   }
 }
 
