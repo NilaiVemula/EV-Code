@@ -4,8 +4,10 @@ White Station High School Science Olympiad Electric Vehicle Code
 */
 
 /* Stuff to change at competition */
-// Distance where car should switch from fast to slow
+// Distance where car should switch from fast to braking
 const long CHANGE_SPEED_DISTANCE = 2;
+//Distance to end the rapidly braking phase
+const long END_BRAKING_DISTANCE = 2.1
 // Final distance
 const long FINAL_DISTANCE = 4;
 
@@ -83,17 +85,24 @@ void loop() {
     analogWrite(PIN_PWM, 150);
     digitalWrite(PIN_DIR, LOW);
   }
-  else if ( REAL_DISTANCE > CHANGE_SPEED_DISTANCE && REAL_DISTANCE < FINAL_DISTANCE ) {
-    // Slow speed
-    Serial.println("MEDIUM");
+  else if ( REAL_DISTANCE >= CHANGE_SPEED_DISTANCE && REAL_DISTANCE <= END_BRAKING_DISTANCE ) {
+    // Rapidly brake by putting motor in opposite direction
+    Serial.println("BRAKING");
     analogWrite(PIN_PWM, 25);
-    digitalWrite(PIN_DIR, LOW);
+    digitalWrite(PIN_DIR, HIGH);
   }
   else if ( REAL_DISTANCE >= FINAL_DISTANCE) {
-    // Turn motor off
-    Serial.println("OFF");
-    analogWrite(PIN_PWM, 0);
+    // Start and stop really slowly
+    Serial.println("FINISHING");
+    analogWrite(PIN_PWM, 0); //Turn off motor
+    digitalWrite(PIN_DIR, LOW); 
+    delay(250) //Off for 0.25 seconds
+    analogWrite(PIN_PWM, 50); //Slowly moving forward
     digitalWrite(PIN_DIR, LOW);
+    delay(250) //Slow for 0.25 seconds
+    analogWrite(PIN_PWM, 50); //Sets motor backward
+    digitalWrite(PIN_DIR, LOW);
+    delay(50) //Backward for 0.05 seconds
     return;
   }
 }
