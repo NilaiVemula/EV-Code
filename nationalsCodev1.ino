@@ -5,9 +5,9 @@ White Station High School Science Olympiad Electric Vehicle Code
 
 /* Stuff to change at competition */
 // Distance where car should switch from fast to slow
-const long CHANGE_SPEED_DISTANCE = 8.5;
+const long CHANGE_SPEED_DISTANCE = 4;
 // Final distance
-const long FINAL_DISTANCE = 9.5;
+const long FINAL_DISTANCE = 6;
 
 /* Wiring Information */
 
@@ -26,10 +26,14 @@ const long FINAL_DISTANCE = 9.5;
     // Motor DIR - connected to pin 4 (Check jumper).
     const int PIN_DIR = 4;
 
+// Declare variables
+long ENCODER_VALUE = 0;
+long REAL_DISTANCE = 0;
+
 // Set initial values
 void reset() {
-  long ENCODER_VALUE = 0;
-  long REAL_DISTANCE = 0; 
+  ENCODER_VALUE = 0;
+  REAL_DISTANCE = 0; 
 }
 
 // Setup function
@@ -64,7 +68,9 @@ void loop() {
   Serial.println(ENCODER_VALUE);
 
   // Calculate real distance
-  REAL_DISTANCE = abs( ( ( encoder / 600 ) * ( 3.14159 * 0.123825 ) ) )
+  // Convert to rotations (600 pulses per rotation)
+  // .123825 is the diameter of the wheel
+  REAL_DISTANCE = abs( ( ( ENCODER_VALUE / 600 ) * ( 3.14159 * 0.123825 ) ) );
 
   // Print real distance
   Serial.print("Real Distance in meters: ");
@@ -73,13 +79,18 @@ void loop() {
   // Control motor based on the encoder value
   if ( REAL_DISTANCE < CHANGE_SPEED_DISTANCE ) {
     // Fast speed - ranges from 0(slow) to 255(fast)
-    analogWrite(pinPwm, 200);
-    digitalWrite(pinDir, LOW);
+    analogWrite(PIN_PWM, 200);
+    digitalWrite(PIN_DIR, LOW);
   }
-  else {
+  else if ( REAL_DISTANCE > CHANGE_SPEED_DISTANCE && REAL_DISTANCE < FINAL_DISTANCE ) {
     // Slow speed
-    analogWrite(pinPwm, 50);
-    digitalWrite(pinDir, LOW);
+    analogWrite(PIN_PWM, 25);
+    digitalWrite(PIN_DIR, LOW);
+  }
+  else if ( REAL_DISTANCE >= FINAL_DISTANCE) {
+    // Turn motor off
+    analogWrite(PIN_PWM, 0);
+    digitalWrite(PIN_DIR, LOW);
   }
 }
 
@@ -93,4 +104,3 @@ void encoderPinChangeB() {
   // Check if encoders equal to each other
   ENCODER_VALUE += digitalRead(ENCODER_A) != digitalRead(ENCODER_B) ? -1 : 1;
 }
-
