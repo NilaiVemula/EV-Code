@@ -1,13 +1,13 @@
 /*
 White Station High School Science Olympiad Electric Vehicle Code
-  Written by Justin Du & Nilai Vemula 
+  Written by Nilai Vemula & Justin Du 
 */
 
 /* Stuff to change at competition */
 // Distance where car should switch from fast to slow
-const long CHANGE_SPEED_DISTANCE = 4;
+const long CHANGE_SPEED_DISTANCE = 2;
 // Final distance
-const long FINAL_DISTANCE = 6;
+const long FINAL_DISTANCE = 4;
 
 /* Wiring Information */
 
@@ -70,7 +70,7 @@ void loop() {
   // Calculate real distance
   // Convert to rotations (600 pulses per rotation)
   // .123825 is the diameter of the wheel
-  REAL_DISTANCE = abs( ( ( ENCODER_VALUE / 600 ) * ( 3.14159 * 0.123825 ) ) );
+  REAL_DISTANCE = abs( ( float(ENCODER_VALUE) / 600 ) *  3.14159 * 0.123825 );
 
   // Print real distance
   Serial.print("Real Distance in meters: ");
@@ -79,18 +79,22 @@ void loop() {
   // Control motor based on the encoder value
   if ( REAL_DISTANCE < CHANGE_SPEED_DISTANCE ) {
     // Fast speed - ranges from 0(slow) to 255(fast)
-    analogWrite(PIN_PWM, 200);
+    Serial.println("FAST");
+    analogWrite(PIN_PWM, 150);
     digitalWrite(PIN_DIR, LOW);
   }
   else if ( REAL_DISTANCE > CHANGE_SPEED_DISTANCE && REAL_DISTANCE < FINAL_DISTANCE ) {
     // Slow speed
+    Serial.println("MEDIUM");
     analogWrite(PIN_PWM, 25);
     digitalWrite(PIN_DIR, LOW);
   }
   else if ( REAL_DISTANCE >= FINAL_DISTANCE) {
     // Turn motor off
+    Serial.println("OFF");
     analogWrite(PIN_PWM, 0);
     digitalWrite(PIN_DIR, LOW);
+    return;
   }
 }
 
