@@ -5,11 +5,11 @@ White Station High School Science Olympiad Electric Vehicle Code
 
 /* Stuff to change at competition */
 // Distance where car should switch from fast to braking
-const long CHANGE_SPEED_DISTANCE = 2;
+const double CHANGE_SPEED_DISTANCE = 2;
 //Distance to end the rapidly braking phase
-const long END_BRAKING_DISTANCE = 2.1
+const double END_BRAKING_DISTANCE = 2.1
 // Final distance
-const long FINAL_DISTANCE = 4;
+const double FINAL_DISTANCE = 4;
 
 /* Wiring Information */
 
@@ -29,8 +29,8 @@ const long FINAL_DISTANCE = 4;
     const int PIN_DIR = 4;
 
 // Declare variables
-long ENCODER_VALUE = 0;
-long REAL_DISTANCE = 0;
+double ENCODER_VALUE = 0;
+double REAL_DISTANCE = 0;
 
 // Set initial values
 void reset() {
